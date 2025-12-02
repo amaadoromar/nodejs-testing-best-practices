@@ -1,80 +1,81 @@
-name: Node.js CI Conditional
 
-on:
-  push:
-    branches:
-      - '*'
-  pull_request:
-    branches:
-      - master
+# name: Node.js CI Conditional
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+# on:
+#   push:
+#     branches:
+#       - '*'
+#   pull_request:
+#     branches:
+#       - master
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v4
 
-      - name: Cache node_modules
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version-file: '.nvmrc'
 
-      - name: Install deps
-        run: npm ci
+#       - name: Cache node_modules
+#         uses: actions/cache@v4
+#         with:
+#           path: node_modules
+#           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+#           restore-keys: |
+#             ${{ runner.os }}-node-
 
-  test_default:
-    runs-on: ubuntu-latest
-    needs: build
-    if: ${{ !contains(github.event.head_commit.message, '[skip-default]') }}
-    steps:
-      - uses: actions/checkout@v4
+#       - name: Install deps
+#         run: npm ci
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
+#   test_default:
+#     runs-on: ubuntu-latest
+#     needs: build
+#     if: ${{ !contains(github.event.head_commit.message, '[skip-default]') }}
+#     steps:
+#       - uses: actions/checkout@v4
 
-      - name: Restore node_modules cache
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version-file: '.nvmrc'
 
-      - name: Install deps (if needed)
-        run: npm ci
+#       - name: Restore node_modules cache
+#         uses: actions/cache@v4
+#         with:
+#           path: node_modules
+#           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Run tests (npm test)
-        run: npm test
+#       - name: Install deps (if needed)
+#         run: npm ci
 
-  test_nestjs:
-    runs-on: ubuntu-latest
-    needs: build
-    #We will test now
-    if: ${{ contains(github.event.head_commit.message, '[nestjs]') }}
-    steps:
-      - uses: actions/checkout@v4
+#       - name: Run tests (npm test)
+#         run: npm test
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
+#   test_nestjs:
+#     runs-on: ubuntu-latest
+#     needs: build
+#     #We will test now
+#     if: ${{ contains(github.event.head_commit.message, '[nestjs]') }}
+#     steps:
+#       - uses: actions/checkout@v4
 
-      - name: Restore node_modules cache
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version-file: '.nvmrc'
 
-      - name: Install deps (if needed)
-        run: npm ci
+#       - name: Restore node_modules cache
+#         uses: actions/cache@v4
+#         with:
+#           path: node_modules
+#           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Run tests (nestjs)
-        run: npm run test:nestjs
+#       - name: Install deps (if needed)
+#         run: npm ci
+
+#       - name: Run tests (nestjs)
+#         run: npm run test:nestjs
